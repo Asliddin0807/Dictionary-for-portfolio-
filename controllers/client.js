@@ -54,10 +54,44 @@ const getUser = asyncHandler(async(req, res) => {
     }
 })
 
+// user status 
+const userStatus = asyncHandler(async(req, res) => {
+    const { id } = req.user
 
+    const find = await Client.findById({ _id: id })
+    if(find){
+        let time = Date.now()
+        const date = new Date(time)
+        const watch = date.toLocaleString()
+        const update = await Client.findByIdAndUpdate(
+            {
+                _id: find._id
+            },
+            {
+                userStatus: [{
+                    watch: watch.slice(12, watch.length),
+                    date: watch.slice(0, 10)
+                }]
+            },
+            {
+                new: true
+            }
+        )
+
+        res.json({ message: "yest" })
+    }else{
+        res.json({ message: 'Pleace sign in!' })
+    }
+})
+
+//tarif 
+const tarifUser = asyncHandler(async(req, res) => {
+    const { id } = req.user
+})
 
 module.exports = {
     register,
     login,
-    getUser
+    getUser,
+    userStatus
 }

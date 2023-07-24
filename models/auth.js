@@ -16,9 +16,41 @@ const authSchema = new mongoose.Schema({
         type: Array
     },
 
-    userStatus: {
-        type: Date
-    }  
+    userStatus: [{
+        watch: {
+            type: String
+        },
+
+        date: {
+            type: String
+        }
+    }],
+
+    tarif: [{
+        free: {
+            type: Boolean,
+            default: true
+        },
+
+        paid: {
+            type: Boolean,
+            default: false
+        }
+    }],
+
+    role: {
+        type: String,
+        default: 'user'
+    },
+
+    isBlock: {
+        type: Boolean,
+        default: false
+    },
+
+    googleId: {
+        type: String,
+    }
     
 })
 
