@@ -38,6 +38,9 @@ app.use(express.json())
 app.use('/', dictionary)
 app.use('/', client)
 app.use('/', admin)
+app.get("/qalesz",(req,res)=>{
+  res.send("somsa")
+})
 
 app.use(useragent.express)
 const PORT = process.env.PORT || 8000
