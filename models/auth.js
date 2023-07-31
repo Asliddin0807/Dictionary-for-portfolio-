@@ -1,9 +1,14 @@
 const mongoose = require('mongoose')
 
 const authSchema = new mongoose.Schema({
-    username: {
+    first_name: {
         type: String,
     },
+
+    last_name: {
+        type: String
+    },
+
     email: {
         type: String,
     },
@@ -59,6 +64,14 @@ const authSchema = new mongoose.Schema({
 
     image: {
         type: Array,
+    },
+
+    deviceId: {
+        type: String
+    },
+
+    device_name: {
+        type: String
     }
 })
 

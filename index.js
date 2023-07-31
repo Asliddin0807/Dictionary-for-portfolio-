@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const session = require('express-session') 
 const MemoryStore = require('memorystore')(session)
-
+const useragent = require('express-useragent')
 
 //using functions and routes
 const dictionary = require('./routes/dictionary')
@@ -17,6 +17,8 @@ const { isConnected } = require('./config/connect')
 require('./config/passport')
 require('dotenv').config()
 
+
+app.use(useragent.express)
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,

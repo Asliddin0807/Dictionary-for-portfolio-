@@ -6,8 +6,8 @@ const crypto = require('crypto')
 const upload = require('../utils/cloudinary')
 const path = require('path')
 const fs = require('fs')
-
-
+const useragent = require('express-useragent')
+const { v4: uuidv4 } = require('uuid');
 
 let date = new Date()
 let time = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`
@@ -24,20 +24,27 @@ function generateNumber(){
 
 //registration
 const register = asyncHandler(async(req, res) => {
-    const { username, email, password } = req.body
+    const { first_name, last_name, email, image, deviceId, deviceName} = req.body
     const find = await Client.findOne({
-        username: username,
+        first_name: first_name,
+        last_name: last_name,
         email: email,
     })
     if(find){
         res.status(403).json({ message: 'User already exsits!' })
     }else{
+        deviceId = uuidv4()
+        deviceName = req.useragent.source
         const create = await Client.create(req.body)
         await create.save()
+        //Asliddin Nuriddinov Back-End dev
         res.status(200).json({ message: 'Success!', data: {
-            username: create.username,
+            first_name: create.first_name,
+            last_name: create.last_name,
             email: create.email,
             password: create.password,
+            deviceId: create.deviceId,
+            device_name: create.device_name,
             token: generateToken(create.id)
         }})
     }
@@ -87,7 +94,6 @@ const getUser = asyncHandler(async(req, res) => {
 // user status 
 const userStatus = asyncHandler(async(req, res) => {
     const { id } = req.user
-
     const find = await Client.findById({ _id: id })
     if(find){
         let time = Date.now()
