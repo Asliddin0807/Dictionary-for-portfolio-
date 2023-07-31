@@ -97,7 +97,7 @@ const addToWishlist = asyncHandler(async(req, res) => {
     const { id } = req.params
     const find = await Client.findById({ _id: _id })
     if(find){
-        const alreadyAdded = find.favourite.filter(like => like._id === id)
+        const alreadyAdded = find.favourite.indexOf(id)
         if(alreadyAdded){
             let add = await Client.findByIdAndUpdate(
                 {
