@@ -1,50 +1,9 @@
+let mas = [
+    { text: "keyboard", translate: "klaviatura" },
+]
 const Dictionary = require('../models/dictionary')
 const asyncHandler = require('express-async-handler')
 const Client = require('../models/auth')
-
-
-const dictionary = [
-    { text: "advertise", translate: "reklama qilmoq" },
-    { text: "assign", translate: "tayinlamoq" },
-    { text: "audience", translate: "tomoshabin" },
-    { text: "breakfast", translate: "nonushta" },
-    { text: "competition", translate: "musobaqa" },
-    { text: "cool", translate: "salqin, ajoyib" },
-    { text: "gain", translate: "erishmoq, ega bo'lmoq" },
-    { text: "importance", translate: "ahamiyat" },
-    { text: "knowledge", translate: "bilim" },
-    { text: "major", translate: "katta" },
-    { text: "mean", translate: "anglatmoq" },
-    { text: "prefer", translate: "afzal ko'rmoq" },
-    { text: "president", translate: "prezident" },
-    { text: "progress", translate: "taraqqiyot" },
-    { text: "respect", translate: "hurmat" },
-    { text: "rich", translate: "boy" },
-    { text: "skill", translate: "qobiliyat" },
-    { text: "somehow", translate: "qandaydir yo'l bilan" },
-    { text: "strength", translate: "kucht -quvvat" },
-    { text: "vote", translate: "ovoz bermoq" },
-    { text: "above", translate: "yuqorida" },
-    { text: "ahead", translate: "oldinga" },
-    { text: "amount", translate: "miqdor" },
-    { text: "belief", translate: "e'tiqod" },
-    { text: "center", translate: "markaz" },
-    { text: "common", translate: "umumiy" },
-    { text: "cost", translate: "xarajat" },
-    { text: "demonstrate", translate: "namoyish qilmoq" },
-    { text: "different", translate: "turli" },
-    { text: "evidence", translate: "dalillar" },
-    { text: "honesty", translate: "halollik" },
-    { text: "idiom", translate: "ibora" },
-    { text: "independent", translate: "mustaqil" },
-    { text: "inside", translate: "ichida" },
-    { text: "master", translate: "usta" },
-    { text: "memory", translate: "xotira" },
-    { text: "proper", translate: "to'g'ri" },
-    { text: "scan", translate: "ko'rmoq" },
-    { text: "section", translate: "bo'lim" },
-    { text: "surface", translate: "sirt" },
-]
 
 
 const addDictionary = asyncHandler(async(req, res) => {
@@ -67,21 +26,32 @@ const addDictionary = asyncHandler(async(req, res) => {
         
         
         
-        for(let i = 0; i < dictionary.length; i++){
+        for(let i = 0; i < mas.length; i++){
             var addTo = await Dictionary.findOneAndUpdate(
                 {
                     id: 1
                 },
                 {
                     $push: {
-                        dictionaryData: dictionary[i]
-                    }
+                        dictionaryData: mas[i]
+                    },
                 }, 
                 { 
                     new: true 
                 })
         }
-        res.status(200).json({ status: 200, data: addTo })
+        let count = await Dictionary.findOneAndUpdate(
+            {
+                id: 1
+            },
+            {
+                count: find.dictionaryData.length
+            },
+            {
+                new: true
+            }
+        )
+        res.status(200).json({ status: 200, data: 'Success' })
     }
     
 })

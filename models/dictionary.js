@@ -5,7 +5,8 @@ const dicSchema = new mongoose.Schema({
     dictionaryData: [{
         text: String,
         translate: String,
-    }]
+    }],
+    count: Number
 })
 
 
