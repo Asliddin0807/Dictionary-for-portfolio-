@@ -24,7 +24,7 @@ function generateNumber(){
 
 //registration
 const register = asyncHandler(async(req, res) => {
-    const { first_name, last_name, email, image, deviceId, deviceName} = req.body
+    const { first_name, last_name, email, password, image, deviceId, deviceName} = req.body
     const find = await Client.findOne({
         first_name: first_name,
         last_name: last_name,
