@@ -8,7 +8,7 @@ const path = require('path')
 const fs = require('fs')
 const useragent = require('express-useragent')
 const { v4: uuidv4 } = require('uuid');
-
+let os = require('os')
 let date = new Date()
 let time = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`
 
@@ -24,28 +24,37 @@ function generateNumber(){
 
 //registration
 const register = asyncHandler(async(req, res) => {
-    const { first_name, last_name, email, password, image, deviceId, deviceName} = req.body
+    const { first_name, last_name, email, password} = req.body
     const find = await Client.findOne({
         first_name: first_name,
         last_name: last_name,
         email: email,
     })
     if(find){
+        console.log('ass')
         res.status(403).json({ message: 'User already exsits!' })
     }else{
-        deviceId = uuidv4()
-        deviceName = req.useragent.source
-        const create = await Client.create(req.body)
+        console.log('a')
+        let device = req.headers['user-agent']
+        let deviceId = uuidv4()
+        const create = new Client({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            email: req.body.email,
+            password: req.body.password,
+            deviceId: deviceId,
+            device_name: device,
+        })
         await create.save()
         //Asliddin Nuriddinov Back-End dev
         res.status(200).json({ message: 'Success!', data: {
-            first_name: create.first_name,
-            last_name: create.last_name,
-            email: create.email,
-            password: create.password,
-            deviceId: create.deviceId,
-            device_name: create.device_name,
-            token: generateToken(create.id)
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            password: password,
+            deviceId: deviceId,
+            // device_name: useragent.platform,
+            // token: generateToken(create.id)
         }})
     }
 })
@@ -62,9 +71,25 @@ const login = asyncHandler(async(req, res) => {
             password: password
         })
         if(findPassword){
+            let deviceId = uuidv4()
+            let device = req.headers['user-agent']
+            const findskiy = await Client.findByIdAndUpdate(
+                {
+                    _id: find._id
+                },
+                {
+                    deviceId: deviceId,
+                    device_name: device
+                }, 
+                {
+                    new: true
+                })
             res.status(200).json({ message: 'Success!', data: {
-                username: find.username,
+                first_name: find.first_name,
+                last_name: find.last_name,
                 email: find.email,
+                deviceId: find.deviceId,
+                device_name: find.device_name,
                 token: refreshToken(find.id)
             }})
         }else{
@@ -74,7 +99,6 @@ const login = asyncHandler(async(req, res) => {
         res.status(404).json({ message: 'Email or Password invalid!' })
 
     }
-    console.log(email, password)
    
 })
 

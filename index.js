@@ -18,16 +18,15 @@ require('./config/passport')
 require('dotenv').config()
 
 
-app.use(useragent.express)
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
-    cookie: { maxAge: 86400000 },
-    store: new MemoryStore({
-      checkPeriod: 86400000 // prune expired entries every 24h
-    }),
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true },
+  cookie: { maxAge: 86400000 },
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -40,6 +39,7 @@ app.use('/', dictionary)
 app.use('/', client)
 app.use('/', admin)
 
+app.use(useragent.express)
 const PORT = process.env.PORT || 8000
 app.listen(PORT, () => {
     console.log('server is running!');
