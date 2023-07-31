@@ -8,7 +8,7 @@ const multer = require('../middleware/multer')
 
 router.post('/register', register)
 router.post('/login', login)
-router.get('/user', authMiddleWare, getUser)
+router.get('/users', authMiddleWare, getUser)
 router.get('/status', authMiddleWare, userStatus)
 router.post('/forgot', forgetPassToken)
 router.post('/reset-password/:token', resetPassword)
