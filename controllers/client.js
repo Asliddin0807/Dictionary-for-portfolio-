@@ -2,13 +2,15 @@ const Client = require('../models/auth')
 const asyncHandler = require('express-async-handler')
 const { generateToken, refreshToken } = require('../config/tokens')
 const forgetPass = require('../config/nodemailer')
-const crypto = require('crypto')
 const upload = require('../utils/cloudinary')
 const path = require('path')
 const fs = require('fs')
 const useragent = require('express-useragent')
 const { v4: uuidv4 } = require('uuid');
 let os = require('os')
+const CryptoJS = require('crypto-js');
+
+
 let date = new Date()
 let time = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`
 
@@ -180,7 +182,8 @@ const forgetPassToken = asyncHandler(async(req, res) => {
         throw new Error('User not find')
     }else{
         try{
-            const token = crypto.randomBytes(32).toString("hex")
+            let myMessage = 'Backend developer'
+            const token = CryptoJS.SHA512(myMessage).toString(CryptoJS.enc.Hex)
             find.passwordResetToken = token
             find.passwordResetExpires = Date.now() + 30 * 60 * 1000 //10 minut
             await find.save()
@@ -210,7 +213,7 @@ const forgetPassToken = asyncHandler(async(req, res) => {
 const resetPassword = asyncHandler(async(req, res) => {
     const { password } = req.body
     const { token } = req.params
-    const heshedToken = crypto.createHash("sha256").update(token).digest("hex")
+    
     const user = await Client.findOne({
         passwordResetToken: token,
         passwordResetExpires: {$gt: Date.now()}
